@@ -47,8 +47,20 @@ class TestOrbit(unittest.TestCase):
 
     def test_ValueFormatting(self):
         """Test correctness of value formatting"""
-        pass
 
+        # Test SMA.
+        self.assertEqual( OrbitFilter(OrbitAttribute.SemimajorAxis, FilterOperation.Equal, 7100.0).apistring(), "eq(destinationOrbits.sma,7100)")
+        self.assertEqual( OrbitFilter(OrbitAttribute.SemimajorAxis, FilterOperation.Equal, 7100  ).apistring(), "eq(destinationOrbits.sma,7100)")
+
+        # Test inclination.
+        self.assertEqual( OrbitFilter(OrbitAttribute.Inclination, FilterOperation.Equal, 53.04).apistring(), "eq(destinationOrbits.inc,53.04)")
+        self.assertEqual( OrbitFilter(OrbitAttribute.Inclination, FilterOperation.Equal, 53   ).apistring(), "eq(destinationOrbits.inc,53.00)")
+
+        # Test periapsis argument.
+        self.assertEqual( OrbitFilter(OrbitAttribute.PeriapsisArg, FilterOperation.Equal, 310).apistring(), "eq(destinationOrbits.aPer,310)")
+
+        # Test epoch.
+        self.assertEqual( OrbitFilter(OrbitAttribute.Epoch, FilterOperation.Equal, "2020-31-01").apistring(), "eq(destinationOrbits.epoch,2020-31-01)")
 
 if __name__ == "__main__":
     unittest.main()
