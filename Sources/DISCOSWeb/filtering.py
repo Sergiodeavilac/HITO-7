@@ -56,6 +56,7 @@ class APIFilter:
             string += f"&{objclass}"
 
         if len(self.orbitfilter) > 0:
-            string += '&'.join( map( self.orbitfilter, lambda X: f"{X}" ) )
+            string += "&"
+            string += '&'.join( list( map( lambda X: f"{X.apistring()}", self.orbitfilter ) ) )
 
         return string

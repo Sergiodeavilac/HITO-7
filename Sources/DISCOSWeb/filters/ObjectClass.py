@@ -67,7 +67,9 @@ class ObjectClassFilter:
 
         # If there are more than 1 (one) filters, perform a containing check.
         else:
-            classes = map(lambda t: f"'{t}'", self.filter)
+            classes = list( map(lambda t: f"'{t}'", self.filter) )
+            classes.sort()
+
             return  f"in(objectClass,({','.join( classes )}))"
 
     def add(self, t: ObjectClassType):
