@@ -74,11 +74,13 @@ class OrbitFilter:
     def apistring(self) -> str:
         """Returns the DISCOSWeb API compliant filter string"""
 
-        if self.attribute == OrbitAttribute.Inclination:
-            value = "{:2.2f}".format(self.value)
-        elif self.attribute == OrbitAttribute.SemimajorAxis:
+        if self.attribute in [OrbitAttribute.Inclination, OrbitAttribute.RAAN, OrbitAttribute.MeanAnomaly]:
+            value = "{:2.2f}".format( float(self.value) )
+        elif self.attribute in [OrbitAttribute.SemimajorAxis, OrbitAttribute.PeriapsisArg]:
             value = f"{int(self.value)}"
+        #elif self.attribute in [OrbitAttribute.PeriapsisArg]:
+        #    value = "{:3.0f}".format( float(self.value) )
         else:
-            value = self.value
+            value = str( self.value )
 
         return f"{self.operation.apistring()}({self.attribute.apistring()},{value})"
