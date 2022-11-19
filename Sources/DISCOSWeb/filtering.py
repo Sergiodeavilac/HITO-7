@@ -16,11 +16,11 @@ class APIFilter:
 
     def __init__(self):
         self.objclass = ObjectClassFilter()
-        self.orbitfilter = set()
+        self.orbitfilter = []
 
     def addOrbitFilter(self, filter: OrbitFilter):
         """Adds an orbit filter"""
-        self.orbitfilter.add(filter)
+        self.orbitfilter.append(filter)
 
     def addObjectClass(self, classtype: ObjectClassType):
         """Adds an ObjectClass to the filter"""
@@ -46,11 +46,14 @@ class APIFilter:
         # Create an empty string.
         string = ""
 
+        # Set the condition that the object must not have fallen to Earth.
+        string += "ne(destinationOrbits,null)"
+
         # If there are object classes, add them.
         objclass = self.objclass.apistring()
 
         if objclass is not None:
-            string += objclass
+            string += f"&{objclass}"
 
         if len(self.orbitfilter) > 0:
             string += '&'.join( map( self.orbitfilter, lambda X: f"{X}" ) )
