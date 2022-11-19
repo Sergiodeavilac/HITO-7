@@ -40,19 +40,21 @@ class OrbitAttribute(Enum):
 
     def apistring(self) -> str:
         if self == OrbitAttribute.Epoch:
-            return "destination-orbits.epoch"
+            return "destinationOrbits.epoch"
         elif self == OrbitAttribute.SemimajorAxis:
-            return "destination-orbits.sma"
+            return "destinationOrbits.sma"
         elif self == OrbitAttribute.Inclination:
-            return "destination-orbits.inc"
+            return "destinationOrbits.inc"
         elif self == OrbitAttribute.Eccentricity:
-            return "destination-orbits.ecc"
+            return "destinationOrbits.ecc"
         elif self == OrbitAttribute.RAAN:
-            return "destination-orbits.raan"
+            return "destinationOrbits.raan"
         elif self == OrbitAttribute.PeriapsisArg:
-            return "destination-orbits.aPer"
+            return "destinationOrbits.aPer"
         elif self == OrbitAttribute.MeanAnomaly:
-            return "destination-orbits.mAno"
+            return "destinationOrbits.mAno"
+        else:
+            raise ValueError
 
 
 
@@ -72,4 +74,11 @@ class OrbitFilter:
     def apistring(self) -> str:
         """Returns the DISCOSWeb API compliant filter string"""
 
-        return f"{self.operation.apistring()}({self.attribute.apistring()},{self.value})"
+        if self.attribute == OrbitAttribute.Inclination:
+            value = "{:2.2f}".format(self.value)
+        elif self.attribute == OrbitAttribute.SemimajorAxis:
+            value = f"{int(self.value)}"
+        else:
+            value = self.value
+
+        return f"{self.operation.apistring()}({self.attribute.apistring()},{value})"

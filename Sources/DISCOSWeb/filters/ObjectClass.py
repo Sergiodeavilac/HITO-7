@@ -63,12 +63,12 @@ class ObjectClassFilter:
 
         # If there is 1 (one) filter return an equality check.
         elif size == 1:
-            return f"eq(ObjectClassType,{self.filter[0]})"
+            return f"eq(objectClass,{list(self.filter)[0]})"
 
         # If there are more than 1 (one) filters, perform a containing check.
         else:
-            classes = map(self.filter, lambda t: f"'{t}'")
-            return  f"in(ObjectClassType,({','.join( classes )}"
+            classes = map(lambda t: f"'{t}'", self.filter)
+            return  f"in(objectClass,({','.join( classes )}))"
 
     def add(self, t: ObjectClassType):
         """Adds the given ObjectClassType to the filter"""
