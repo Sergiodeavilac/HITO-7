@@ -8,6 +8,7 @@ from load_gmat import *
 
 fm = Forces()
 
+fm.Help()
 
 
 

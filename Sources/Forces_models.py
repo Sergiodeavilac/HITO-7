@@ -36,9 +36,6 @@ def Forces():
     fm.AddForce(sungrav)
     fm.AddForce(jrdrag)
     
-    
-    
-    print(fm.Help())
     return(fm)
 
 if __name__ == '__main__': 
