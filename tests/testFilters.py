@@ -77,9 +77,9 @@ class TestAPIFilter(unittest.TestCase):
         filter.addObjectClass( ObjectClassType.Debris )
 
         # Build the Orbit requirements.
-        sma = OrbitFilter( OrbitAttribute.SemimajorAxis, FilterOperation.GreaterEqual, 9000 )
-        incs = OrbitFilter( OrbitAttribute.Inclination, FilterOperation.GreaterEqual, 45.0 )
-        incm = OrbitFilter( OrbitAttribute.Inclination, FilterOperation.LessEqual, 65.0 )
+        sma  = OrbitFilter( OrbitAttribute.SemimajorAxis, FilterOperation.GreaterEqual, 9000 )
+        incs = OrbitFilter( OrbitAttribute.Inclination,   FilterOperation.GreaterEqual, 45.0 )
+        incm = OrbitFilter( OrbitAttribute.Inclination,   FilterOperation.LessEqual,    65.0 )
 
         # Add orbit requirements.
         filter.addOrbitFilter(sma)
