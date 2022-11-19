@@ -89,5 +89,6 @@ class TestAPIFilter(unittest.TestCase):
         self.assertEqual( filter.apistring(), "ne(destinationOrbits,null)&in(objectClass,('Other Debris','Payload'))&ge(destinationOrbits.sma,9000)&ge(destinationOrbits.inc,45.00)&le(destinationOrbits.inc,65.00)" )
 
 
+
 if __name__ == "__main__":
     unittest.main()
