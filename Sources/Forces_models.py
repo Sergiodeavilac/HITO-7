@@ -4,14 +4,18 @@ from load_gmat import *
 # Forces Model 
 # -----------------------------------------------------------
 def Forces():
+    
     fm = gmat.Construct("ForceModel", "TheForces")
 
     # An 8x8 JGM-3 Gravity Model
     earthgrav = gmat.Construct("GravityField")
     earthgrav.SetField("BodyName","Earth")
-    earthgrav.SetField("Degree",8)
-    earthgrav.SetField("Order",8)
+    earthgrav.SetField("Degree",4)
+    earthgrav.SetField("Order",4)
     earthgrav.SetField("PotentialFile","JGM2.cof")
+    
+    # Add forces into the ODEModel container
+    fm.AddForce(earthgrav)
 
     # The Point Masses
     moongrav = gmat.Construct("PointMassForce")
@@ -31,7 +35,7 @@ def Forces():
     fm.AddForce(moongrav)
     fm.AddForce(sungrav)
     fm.AddForce(jrdrag)
-    fm.AddForce(earthgrav)
+    
     
     
     print(fm.Help())
