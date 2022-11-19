@@ -33,8 +33,9 @@ def Forces():
     fm.AddForce(jrdrag)
     fm.AddForce(earthgrav)
     
+    
     print(fm.Help())
     return(fm)
 
 if __name__ == '__main__': 
-    Forces
+    Forces()

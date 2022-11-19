@@ -6,7 +6,7 @@ from load_gmat import *
 # Forces Model 
 # -----------------------------------------------------------
 
-fm = Forces
+fm = Forces()
 
 
 
