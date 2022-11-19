@@ -1,15 +1,15 @@
-from Forces_models import Forces
-from load_gmat import *
+from GMAT.Forces_models import Forces
+from GMAT.load_gmat import *
+from GMAT.Propagator import Prop
 
 
 # -----------------------------------------------------------
 # Forces Model 
 # -----------------------------------------------------------
 
-fm = Forces
+fm = Forces()
 
-
-
+fm.Help()
 
 # -----------------------------------------------------------
 # Our spacecraft 
@@ -33,13 +33,26 @@ mysat.SetField("Cr", 1.8)
 mysat.SetField("DragArea", 1.5)
 mysat.SetField("SRPArea", 1.2)
 
+allsat = [mysat]
 
 # -----------------------------------------------------------
 # Import data DiscosWeb
 # -----------------------------------------------------------
 
 
-# Propagate
+
+
+# -----------------------------------------------------------
+# Propagator
+# -----------------------------------------------------------
+
+T = 1 # weeks
+v = {}
+r = {}
+t = {}
+
+for i in range(len(allsat)): 
+    (r[i], v[i], t[i]) = Prop(fm, allsat[i], T)
 
 
 
