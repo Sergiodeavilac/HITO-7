@@ -128,5 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# user
+# User ignores
 load_gmat.py
+
+APITests/*
+GMATtests/*
