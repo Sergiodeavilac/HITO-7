@@ -1,4 +1,4 @@
-from load_gmat import *
+from .load_gmat import *
 
 # -----------------------------------------------------------
 # Forces Model 
