@@ -1,5 +1,5 @@
-from Forces_models import Forces
-from load_gmat import *
+from GMAT.Forces_models import Forces
+from GMAT.load_gmat import *
 
 
 # -----------------------------------------------------------
@@ -38,6 +38,8 @@ mysat.SetField("SRPArea", 1.2)
 # -----------------------------------------------------------
 # Import data DiscosWeb
 # -----------------------------------------------------------
+
+
 
 
 # Propagate
