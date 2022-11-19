@@ -129,5 +129,7 @@ dmypy.json
 .pyre/
 
 # User ignores
+load_gmat.py
+
 APITests/*
 GMATtests/*
