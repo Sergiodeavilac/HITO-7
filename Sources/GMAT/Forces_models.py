@@ -3,9 +3,9 @@ from .load_gmat import *
 # -----------------------------------------------------------
 # Forces Model 
 # -----------------------------------------------------------
-def Forces(degree, order):
-    
-    fm = gmat.Construct("ForceModel", "TheForces")
+def Forces(degree, order, name):
+    # Build an empty force model.
+    fm = gmat.Construct("ForceModel", name)
 
     # An 8x8 JGM-3 Gravity Model
     earthgrav = gmat.Construct("GravityField")
@@ -37,6 +37,3 @@ def Forces(degree, order):
     fm.AddForce(jrdrag)
     
     return(fm)
-
-if __name__ == '__main__': 
-    Forces()
