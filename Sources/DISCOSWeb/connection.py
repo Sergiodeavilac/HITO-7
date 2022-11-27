@@ -26,9 +26,12 @@ class APIConnection:
     def url(self, filter: Optional[APIFilter] = None) -> str:
         """Buils the full URL to perform this query"""
 
-        return f"https://discosweb.esoc.esa.int/api/objects?filter={ filter.apistring() }"
+        if filter is not None:
+            return f"https://discosweb.esoc.esa.int/api/objects?filter={ filter.apistring() }"
+        else:
+            return f"https://discosweb.esoc.esa.int/api/objects"
 
-    def request(self, filter: Optional[APIFilter] = None):
+    def request(self, filter: APIFilter):
         """Requests a query response from the DISCOSWeb API server"""
 
         # Constant URL of the API.
