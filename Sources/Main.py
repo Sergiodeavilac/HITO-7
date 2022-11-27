@@ -9,7 +9,8 @@ from numpy import float64, zeros, shape
 # Forces Model 
 # -----------------------------------------------------------
 
-fm = Forces()
+fm = Forces(1,0)
+fm2 = Forces(8,8)
 
 fm.Help()
 
