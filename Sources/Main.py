@@ -1,6 +1,8 @@
 from GMAT.Forces_models import Forces
 from GMAT.load_gmat import *
 from GMAT.Propagator import Prop
+from pytwobodyorbit import TwoBodyOrbit
+from numpy import float64, zeros, shape
 
 
 # -----------------------------------------------------------
@@ -47,12 +49,31 @@ allsat = [mysat]
 # -----------------------------------------------------------
 
 T = 1 # weeks
-v = {}
-r = {}
-t = {}
+v = { }
+r = { }
+t = { }
+kepl = { }
+mu_earth = float64(3.96 * 10**5)
+
 
 for i in range(len(allsat)): 
     (r[i], v[i], t[i]) = Prop(fm, allsat[i], T)
+    
+    orbit = TwoBodyOrbit("Sat", mu = mu_earth)
+    
+    kep = zeros( (T*24*60, 11) )
+    # kep = [ ]
+    for j in range(T*24*60):
+        orbit.setOrbCart(t[i][j], r[i][j], v[i][j])   
+        # kep.append(orbit.elmKepl())
+        temp = orbit.elmKepl()
+        kep[j,:] = list( temp.values() )
+
+    
+    kepl[i] = kep
+    print(kepl)
+   
+    
 
 
 
