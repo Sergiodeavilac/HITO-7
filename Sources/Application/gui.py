@@ -25,9 +25,6 @@ class ApplicationGUI(BoxLayout):
         self.checkbtn.bind(on_press=checkCollisions)
         self.add_widget(self.checkbtn)
 
-    def check(self, obj):
-        print("Checking orbit")
-
 
 
 class OrbitParameters(GridLayout):
