@@ -40,19 +40,19 @@ class OrbitAttribute(Enum):
 
     def apistring(self) -> str:
         if self == OrbitAttribute.Epoch:
-            return "destinationOrbits.epoch"
+            return "epoch"
         elif self == OrbitAttribute.SemimajorAxis:
-            return "destinationOrbits.sma"
+            return "sma"
         elif self == OrbitAttribute.Inclination:
-            return "destinationOrbits.inc"
+            return "inc"
         elif self == OrbitAttribute.Eccentricity:
-            return "destinationOrbits.ecc"
+            return "ecc"
         elif self == OrbitAttribute.RAAN:
-            return "destinationOrbits.raan"
+            return "raan"
         elif self == OrbitAttribute.PeriapsisArg:
-            return "destinationOrbits.aPer"
+            return "aPer"
         elif self == OrbitAttribute.MeanAnomaly:
-            return "destinationOrbits.mAno"
+            return "mAno"
         else:
             raise ValueError
 

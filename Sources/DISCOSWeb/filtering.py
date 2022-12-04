@@ -17,6 +17,7 @@ class APIFilter:
     def __init__(self):
         self.objclass = ObjectClassFilter()
         self.orbitfilter = []
+        self.epoch = None
 
     def addOrbitFilter(self, filter: OrbitFilter):
         """Adds an orbit filter"""
@@ -34,10 +35,14 @@ class APIFilter:
         """Clears the object class filter"""
         self.objclass.clear()
 
+    def setMinimumEpoch(self, epoch):
+        self.epoch = epoch
+
     def display(self):
         """Displays all the filters in a human readable way"""
 
         # If there are object classes, 
+        pass
 
 
     def apistring(self) -> str:
@@ -47,7 +52,12 @@ class APIFilter:
         string = ""
 
         # Set the condition that the object must not have fallen to Earth.
-        string += "ne(destinationOrbits,null)"
+        #string += "ne(destinationOrbits,null)"
+        #string += "ne(sma,null)"
+        if self.epoch is not None:
+            string += f"gt(epoch,epoch:'{self.epoch}')"
+        else:
+            string += f"gt(epoch,epoch:'2010-01-01 12:00')"
 
         # If there are object classes, add them.
         objclass = self.objclass.apistring()

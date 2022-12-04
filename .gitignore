@@ -133,3 +133,5 @@ load_gmat.py
 
 APITests/*
 GMATtests/*
+token.py
+tests/

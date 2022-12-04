@@ -2,11 +2,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Main Menu",
+            "name": "Main",
             "type": "python",
             "request": "launch",
             "console": "integratedTerminal",
-            "program": "${workspaceFolder}/Milestone_4.py"
+            "program": "${workspaceFolder}/Sources/Main.py"
         }
     ]
 }

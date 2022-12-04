@@ -31,21 +31,51 @@ class APIConnection:
         else:
             return f"https://discosweb.esoc.esa.int/api/objects"
 
-    def request(self, filter: APIFilter):
-        """Requests a query response from the DISCOSWeb API server"""
-
+    def orbits(self, epoch=None):
         # Constant URL of the API.
         URL = 'https://discosweb.esoc.esa.int'
 
-        # Perform the request and get its JSON representation.
+        # Get the epoch filter.
+        if epoch is not None:
+            filter = f"gt(epoch,epoch:'{epoch}')"
+        else:
+            filter = "gt(epoch,epoch:'2010-01-01 12:00')"
+
+        # Perform the request.
         response = requests.get(
-            f'{URL}/api/objects',
+            f'{URL}/api/destination-orbits',
             headers={
                 'Authorization': f'Bearer {self.token}',
                 'DiscosWeb-Api-Version': '2',
             },
             params={
-                'filter': f"{filter.apistring()}"
+                'filter': filter,
+                'page[size]': '30',
+            },
+        )
+
+        data = response.json()
+        pointed = response.url
+
+        # Check if the response failed.
+        if not response.ok:
+            pprint(data['errors'])
+
+        return data, pointed
+
+    def orbitparams(self, id: int):
+        # Constant URL of the API.
+        URL = 'https://discosweb.esoc.esa.int'
+
+        # Perform the request.
+        response = requests.get(
+            f'{URL}/api/objects/{id}/destination-orbits',
+            headers={
+                'Authorization': f'Bearer {self.token}',
+                'DiscosWeb-Api-Version': '2',
+            },
+            params={
+                'page[size]': '100',
             },
         )
 
@@ -54,3 +84,38 @@ class APIConnection:
         # Check if the response failed.
         if not response.ok:
             pprint(data['errors'])
+        else:
+            pprint(data['data'])
+
+        return data['data']
+
+
+    def objects(self, filter: APIFilter):
+        """Requests a query response from the DISCOSWeb API server"""
+
+        # Constant URL of the API.
+        URL = 'https://discosweb.esoc.esa.int'
+
+        print(f"Searching filter: {filter.apistring()}")
+
+        # Perform the request and get its JSON representation.
+        response = requests.get(
+            f'{URL}/api/destination-orbits',
+            headers={
+                'Authorization': f'Bearer {self.token}',
+                'DiscosWeb-Api-Version': '2',
+            },
+            params={
+                'filter': f"{filter.apistring()}",
+                'page[size]': '100',
+            },
+        )
+
+        data = response.json()
+
+        # Check if the response failed.
+        if not response.ok:
+            pprint(data['errors'])
+        else:
+            pprint(data)
+            return data['data']
