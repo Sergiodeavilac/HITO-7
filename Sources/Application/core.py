@@ -16,14 +16,24 @@ from kivy.app import App
 from kivy.uix.popup import Popup
 from kivy.uix.progressbar import ProgressBar
 
+from multiprocessing import Pool, cpu_count
+
 from numba import njit, prange
 
 import numpy as np
 from numpy import float64, sqrt, array, zeros, subtract, power, sum
 
+from pathlib import Path
+
 from pytwobodyorbit import TwoBodyOrbit
 
+from subprocess import Popen
+
 from typing import Tuple
+
+import __main__
+
+import os
 
 
 
@@ -31,6 +41,9 @@ class ApplicationCore(App):
     def __init__(self, **kwargs):
         # Application configuration.
         super(ApplicationCore, self).__init__(**kwargs)
+
+        # Create a file UID.
+        self.fileuid = 0
 
         # DISCOSWeb connection.
         self.connection = APIConnection(token)
@@ -131,13 +144,68 @@ class ApplicationCore(App):
         self.propagateAll()
 
         # Filter the conflicting orbits.
-        par = array( list( map( lambda X: array( X[1][0] ), self.objectOrbits.items() ) ) )
-        sat = array( list( map( lambda X: array(X)        , self.satelliteOrbit[0]    ) ) )
+        objects = list( map( lambda X: (X[0], array( X[1][0] )), self.objectOrbits.items() ) )
+        par = array( list( map( lambda X: X[1]    , objects                ) ) )
+        sat = array( list( map( lambda X: array(X), self.satelliteOrbit[0] ) ) )
         conflicts = findConflicts(sat, par, self.warnDistance)
 
-        print("Done saerching for conflicts")
+        print("Done searching for conflicts")
 
-        # TODO : Send the conflic orbits to Polyastro.
+        # Send the conflic orbits to Polyastro.
+
+        # Create the new file.
+        filepath = Path(__main__.__file__)
+        folder = filepath.parent.absolute()
+        datafile = os.path.join(folder, f"OrbitData{self.fileuid}.txt")
+        datafile = datafile.replace('\\', '/')
+        #datafile = folder.join(f"OrbitData{self.fileuid}.txt")
+        pythonpath = os.path.join(folder, "Plot_orbits", "Plot_orbits.py")
+        pythonpath = pythonpath.replace('\\', '/')
+        self.fileuid += 1
+
+        # Write to the target file.
+        with open(datafile, "w") as f:
+            # Get the satellite data.
+            ta = self.satellite.GetField("TA")
+
+            aop = self.satellite.GetField("AOP")
+            ecc = self.satellite.GetField("ECC")
+            inc = self.satellite.GetField("INC")
+            sma = self.satellite.GetField("SMA")
+
+            raan = self.satellite.GetField("RAAN")
+
+            # Write the satellite data.
+            f.write(f"{ta} {aop} {ecc} {inc} {sma} {raan}\n")
+
+            # Write the conflict orbit data.
+            for (i, conflict) in enumerate( conflicts ):
+                if conflict:
+                    # Get the key.
+                    key = objects[i][0]
+
+                    # Get the object.
+                    obj = self.objects[key]
+
+                    # Extract the data.
+                    ta = obj.GetField("TA")
+
+                    aop = obj.GetField("AOP")
+                    ecc = obj.GetField("ECC")
+                    inc = obj.GetField("INC")
+                    sma = obj.GetField("SMA")
+
+                    raan = obj.GetField("RAAN")
+
+                    # Write to the file.
+                    f.write(f"{ta} {aop} {ecc} {inc} {sma} {raan}\n")
+
+        print(f"Done writing the file @ {datafile}")
+
+        if len(conflicts) > 0:
+            print(f"Launching Python 3.10 command with file @{pythonpath}")
+            Popen(["python3.10", "-m", pythonpath, datafile], shell=True)
+
 
     def propagateAll(self):
         """Propagates all elements in the orbits"""
@@ -247,9 +315,7 @@ class ApplicationCore(App):
         return (r, kepl)
 
 
-
-@njit(parallel=True)
-def findConflicts(sat, objects, warnDistance):
+def findConflicts_(sat, objects, warnDistance):
     bools = array( [False for _ in range(len(objects))] )
 
     for o in prange(len(objects)):
@@ -271,3 +337,24 @@ def findConflicts(sat, objects, warnDistance):
                     print(f"Object {o} conflicts with the satellite\n")
 
     return bools
+
+
+
+def findConflicts(sat, objects, warn: float):
+    flags = [False for _ in range(len(objects))]
+
+    for obj in objects:
+        for i in range(len(obj[0])):
+            if flags[i]:
+                break
+
+            for j in range(len(sat)):
+                if flags[i]:
+                    break
+
+                distance = np.sqrt( np.sum( np.power( np.subtract(obj[i], sat[j]), 2.0 ) ) )
+
+                if distance < warn:
+                    flags[i] = True
+
+    return flags

@@ -131,6 +131,8 @@ dmypy.json
 # User ignores
 load_gmat.py
 
+*.txt
+
 APITests/*
 GMATtests/*
 token.py

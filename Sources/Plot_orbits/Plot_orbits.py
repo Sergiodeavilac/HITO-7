@@ -5,24 +5,50 @@ from poliastro.twobody import Orbit
 from poliastro.plotting.static import StaticOrbitPlotter
 from poliastro.plotting.interactive import OrbitPlotter3D, OrbitPlotter2D
 
-def Orbit_Param(): #Para el programa final, la función tiene como input un diccionario
-    long = 5
-    #long = len(diccionario)
-    interac = OrbitPlotter3D() #Sólo se define aquí y vale para todas las órbitas
-    for i in range (long):
-        #Definición de parámetros orbitales de cada órbita
-        a = 7500+100*i << u.km
-        ecc = 0.093315 << u.one
-        inc = 1.85+5*i << u.deg
-        raan = 49.562-2*i << u.deg
-        argp = 286.537+45*i << u.deg
-        nu = 23.33+30*i << u.deg
-        #Definición de la órbita y su plot
-        orb = Orbit.from_classical(Earth, a, ecc, inc, raan, argp, nu)
-        interac.plot(orb)
-    #Plot de todas las órbitas
-    D = interac.plot(orb)
+import sys
+
+def OrbitParam(sat, obj): #Para el programa final, la función tiene como input un diccionario
+    # Orbit plotter.
+    interac = OrbitPlotter3D()
+
+    # Display the objects orbits.
+    for o in obj:
+        sma, ecc, inc, raan, aop, ta = extract(o)
+        interac.plot( Orbit.from_classical(Earth, sma, ecc, inc, raan, aop, ta) )
+
+    # Display the satellite.
+    sma, ecc, inc, raan, aop, ta = extract(sat)
+    D = interac.plot( Orbit.from_classical(Earth, sma, ecc, inc, raan, aop, ta) )
+
+    # Display the orbit.
     D.show()
 
+def extract(obj):
+    return obj[4] << u.m, obj[2] << u.one, obj[3] << u.deg, obj[5] << u.deg, obj[1] << u.deg, obj[0] << u.deg
+
 if __name__ == "__main__":
-    Orbit_Param()
+    #Orbit_Param()
+
+    # Command line arguments.
+    if len(sys.argv) < 2:
+        print(f"Expected 2 command line argument, found {len(sys.argv)}")
+
+    # Get the first arg.
+    path = sys.argv[1]
+
+    # Open the file.
+    with open(path, "r") as file:
+        # Read the file.
+        orbitdata = file.readlines()
+
+        # Get the satellite data.
+        sat = list( map( float, orbitdata[0].split(' ') ) )
+
+        # Get the object data.
+        obj = []
+
+        for j in range(1, len(orbitdata)):
+            obj.append( list( map(float, orbitdata[j].split(' ')) ) )
+
+        # Send the arguments to the display function.
+        OrbitParam(sat, obj)
