@@ -38,7 +38,7 @@ class OrbitParameters(GridLayout):
         # Add the SMA parameter.
         self.smainput = TextInput(multiline=False)
         self.smainput.input_filter = "float"
-        self.add_widget(Label(text="Semi-major axis"))
+        self.add_widget(Label(text="Semi-major axis (km)"))
         self.add_widget(self.smainput)
 
         # Add the ECC parameter.
@@ -50,29 +50,29 @@ class OrbitParameters(GridLayout):
         # Add the INC parameter.
         self.incinput = TextInput(multiline=False)
         self.incinput.input_filter = "float"
-        self.add_widget(Label(text="Inclination"))
+        self.add_widget(Label(text="Inclination (degrees)"))
         self.add_widget(self.incinput)
 
         # Add the RAAN parameter.
         self.raaninput = TextInput(multiline=False)
         self.raaninput.input_filter = "float"
-        self.add_widget(Label(text="RAAN"))
+        self.add_widget(Label(text="RAAN (degrees)"))
         self.add_widget(self.raaninput)
 
         # Add the AOP parameter.
         self.aopinput = TextInput(multiline=False)
         self.aopinput.input_filter = "float"
-        self.add_widget(Label(text="Argument of Periapsis"))
+        self.add_widget(Label(text="Argument of Periapsis (degrees)"))
         self.add_widget(self.aopinput)
 
         # Add the TA parameter.
         self.tainput = TextInput(multiline=False)
         self.tainput.input_filter = "float"
-        self.add_widget(Label(text="True Anomaly"))
+        self.add_widget(Label(text="True Anomaly (degrees)"))
         self.add_widget(self.tainput)
 
         # Add the minimum distance for check.
         self.mindistance = TextInput(multiline=False)
         self.mindistance.input_filter = "int"
-        self.add_widget(Label(text="Collision Warning Distance"))
+        self.add_widget(Label(text="Collision Warning Distance (m)"))
         self.add_widget(self.mindistance)

@@ -101,7 +101,7 @@ class ApplicationCore(App):
             sat.SetField("Epoch", "12 Mar 2020 15:00:00.000")
             sat.SetField("CoordinateSystem", "EarthMJ2000Eq")
             sat.SetField("DisplayStateType", "Keplerian")
-            sat.SetField("SMA", sma if sma is not None else 0)
+            sat.SetField("SMA", sma / 1000. if sma is not None else 0)
             sat.SetField("ECC", ecc if ecc is not None else 0)
             sat.SetField("INC", inc if inc is not None else 0)
             sat.SetField("RAAN", raan if raan is not None else 0)
@@ -159,7 +159,7 @@ class ApplicationCore(App):
         datafile = os.path.join(folder, f"OrbitData{self.fileuid}.txt")
         datafile = datafile.replace('\\', '/')
         #datafile = folder.join(f"OrbitData{self.fileuid}.txt")
-        pythonpath = os.path.join(folder, "Plot_orbits", "Plot_orbits.py")
+        pythonpath = os.path.join(folder, "Plot_orbits", "Plot_orbits")
         pythonpath = pythonpath.replace('\\', '/')
         self.fileuid += 1
 
@@ -203,8 +203,9 @@ class ApplicationCore(App):
         print(f"Done writing the file @ {datafile}")
 
         if len(conflicts) > 0:
-            print(f"Launching Python 3.10 command with file @{pythonpath}")
-            Popen(["python3.10", "-m", pythonpath, datafile], shell=True)
+            #print(f"Launching Python 3.10 command with file @{pythonpath}")
+            #Popen(["python3.10", "-m", pythonpath, datafile], shell=True)
+            print("Some collissions found, launch GUI")
 
 
     def propagateAll(self):
@@ -352,9 +353,14 @@ def findConflicts(sat, objects, warn: float):
                 if flags[i]:
                     break
 
-                distance = np.sqrt( np.sum( np.power( np.subtract(obj[i], sat[j]), 2.0 ) ) )
+                subtract = np.subtract(obj[i], sat[j])
+                power = np.power(subtract, 2.0 )
+                sum = np.sum( power )
+
+                distance = np.sqrt( sum )
 
                 if distance < warn:
+                    print(f"Found collission of {distance} km")
                     flags[i] = True
 
     return flags
