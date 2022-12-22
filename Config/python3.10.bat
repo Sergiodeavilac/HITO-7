@@ -1,0 +1,1 @@
+C:\Users\agrc1\AppData\Local\Programs\Python\Python310\python %*
